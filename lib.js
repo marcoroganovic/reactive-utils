@@ -1,7 +1,7 @@
 (function(global) {
   
   // more to implement
-  //
+
   function makeReactive(obj, cb) {
     return new Proxy(obj, {
       get: function(target, prop) {
