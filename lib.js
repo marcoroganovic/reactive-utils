@@ -1,24 +1,40 @@
 (function(global) {
-  
-  // more to implement
 
-  function makeReactive(obj, cb) {
-    return new Proxy(obj, {
-      get: function(target, prop) {
-        return prop in target ? target[prop] : undefined;
+  function _observeObject(obj, cb) {
+    for(var prop in obj) {
+      if(obj.hasOwnProperty(prop)) {
+        _observeProp(obj, prop, cb);
+      }
+    }
+
+    return obj;
+  }
+
+  function _observeProp(obj, prop, cb) {
+    var currentValue = obj[prop];
+
+    Object.defineProperty(obj, prop, {
+
+      get: function() {
+        return currentValue;
       },
 
-      set: function(target, prop, value) {
-        target[prop] = value;
-        if(cb) cb(value);
-        return target[prop];
+      set: function(newValue) {
+        if(newValue === currentValue) return;
+        currentValue = newValue;
+        if(cb) cb(prop);
       }
     });
+  }
+      
+  function makeReactiveArray(arr) {
+    
   }
 
 
   global.Reactive = {
-    object: makeReactive
+    object: _observeObject,
+    array: makeReactiveArray
   }
 
 })(window);
